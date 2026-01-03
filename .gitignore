@@ -92,38 +92,71 @@ credentials.json
 .dockerignore
 # Ignore everything by default
 *
- 
-# Allow only these folders
+ # =========================
+# Allow only selected projects
+# =========================
+
 !Backend/
 !Backend/**
 
 !Farmer Frontend/
 !Farmer Frontend/**
 
-# Allow gitignore
+!AgriIOT/
+!AgriIOT/**
+
+!Kisan-Mitra-Mega-Project-backup/
+!Kisan-Mitra-Mega-Project-backup/**
+
+# Always allow gitignore
 !.gitignore
-
-# Ignore uploaded files inside Backend
-Backend/uploads/
-Backend/uploads/**
-
 # =========================
-# Backend uploads (keep folder, ignore files)
+# Allow only selected projects
 # =========================
-Backend/uploads/*
 
-# Ignore common uploaded file types
-Backend/uploads/**/*.pdf
-Backend/uploads/**/*.jpg
-Backend/uploads/**/*.jpeg
-Backend/uploads/**/*.png
-Backend/uploads/**/*.webp
-Backend/uploads/**/*.doc
-Backend/uploads/**/*.docx
-Backend/uploads/**/*.xls
-Backend/uploads/**/*.xlsx
-Backend/uploads/**/*.csv
+!Backend/
+!Backend/**
 
-# Keep folder structure
-!Backend/uploads/.gitkeep
-!Backend/uploads/**/.gitkeep
+!Farmer Frontend/
+!Farmer Frontend/**
+
+!AgriIOT/
+!AgriIOT/**
+
+!Kisan-Mitra-Mega-Project-backup/
+!Kisan-Mitra-Mega-Project-backup/**
+
+# Always allow gitignore
+!.gitignore
+# =========================
+# Allow only selected projects
+# =========================
+
+!Backend/
+!Backend/**
+
+!Farmer Frontend/
+!Farmer Frontend/**
+
+!AgriIOT/
+!AgriIOT/**
+
+!Kisan-Mitra-Mega-Project-backup/
+!Kisan-Mitra-Mega-Project-backup/**
+
+# Always allow gitignore
+!.gitignore
+# =========================
+# Ignore ALL image files (entire repo)
+# =========================
+*.jpg
+*.jpeg
+*.png
+*.gif
+*.bmp
+*.webp
+*.tiff
+*.svg
+*.ico
+*.heic
+*.pdf

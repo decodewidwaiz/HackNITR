@@ -1,0 +1,651 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart Farming Dashboard</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #1a7f37;
+            --primary-light: #e8f5e9;
+            --secondary: #2c5282;
+            --warning: #d97706;
+            --danger: #dc2626;
+            --info: #0ea5e9;
+            --success: #16a34a;
+            --dark: #1e293b;
+            --light: #f8fafc;
+            --gray: #64748b;
+            --card-bg: #ffffff;
+            --shadow: rgba(0, 0, 0, 0.08);
+            --shadow-hover: rgba(0, 0, 0, 0.12);
+            --border-radius: 16px;
+            --transition: all 0.3s ease;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #f0f9ff 0%, #f0fff4 100%);
+            min-height: 100vh;
+            padding: 20px;
+            color: var(--dark);
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        /* Header Styles */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .header-left h1 {
+            font-size: 28px;
+            color: var(--dark);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 5px;
+        }
+
+        .header-left p {
+            color: var(--gray);
+            font-size: 15px;
+        }
+
+        .header-right {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+
+        .time-display {
+            background: var(--card-bg);
+            padding: 10px 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px var(--shadow);
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .refresh-indicator {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--gray);
+            font-size: 14px;
+        }
+
+        .refresh-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background-color: var(--success);
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        /* Dashboard Grid */
+        .dashboard {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 24px;
+            margin-bottom: 40px;
+        }
+
+        /* Card Styles */
+        .card {
+            background: var(--card-bg);
+            border-radius: var(--border-radius);
+            padding: 24px;
+            box-shadow: 0 6px 16px var(--shadow);
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+            border-left: 5px solid var(--primary);
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 24px var(--shadow-hover);
+        }
+
+        .card::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(to right, var(--primary), transparent);
+        }
+
+        .card.warning { border-left-color: var(--warning); }
+        .card.danger { border-left-color: var(--danger); }
+        .card.info { border-left-color: var(--info); }
+        .card.success { border-left-color: var(--success); }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .card-title {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--gray);
+        }
+
+        .card-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+        }
+
+        .card.ph .card-icon { background: linear-gradient(135deg, #3b82f6, #1d4ed8); }
+        .card.gas .card-icon { background: linear-gradient(135deg, #f59e0b, #d97706); }
+        .card.rain .card-icon { background: linear-gradient(135deg, #0ea5e9, #0369a1); }
+        .card.flame .card-icon { background: linear-gradient(135deg, #ef4444, #dc2626); }
+        .card.temp .card-icon { background: linear-gradient(135deg, #f97316, #ea580c); }
+        .card.humidity .card-icon { background: linear-gradient(135deg, #06b6d4, #0e7490); }
+        .card.soil .card-icon { background: linear-gradient(135deg, #10b981, #059669); }
+
+        .card-value {
+            font-size: 32px;
+            font-weight: 700;
+            color: var(--dark);
+            margin-bottom: 8px;
+            display: flex;
+            align-items: baseline;
+            gap: 5px;
+        }
+
+        .card-unit {
+            font-size: 16px;
+            font-weight: 500;
+            color: var(--gray);
+        }
+
+        .card-footer {
+            margin-top: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .status-badge {
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .status-ok {
+            background-color: rgba(22, 163, 74, 0.1);
+            color: var(--success);
+        }
+
+        .status-alert {
+            background-color: rgba(220, 38, 38, 0.1);
+            color: var(--danger);
+        }
+
+        .trend {
+            font-size: 13px;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            color: var(--gray);
+        }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            padding: 25px;
+            color: var(--gray);
+            font-size: 14px;
+            border-top: 1px solid rgba(0, 0, 0, 0.05);
+            margin-top: 20px;
+        }
+
+        .footer-text {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            margin-bottom: 8px;
+        }
+
+        .system-status {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 12px;
+            border-radius: 20px;
+            background-color: rgba(22, 163, 74, 0.1);
+            color: var(--success);
+            font-weight: 600;
+            font-size: 13px;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .dashboard {
+                grid-template-columns: 1fr;
+            }
+            
+            header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .header-right {
+                width: 100%;
+                justify-content: space-between;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .card-value {
+                font-size: 28px;
+            }
+            
+            .card {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <header>
+            <div class="header-left">
+                <h1><i class="fas fa-seedling"></i> Smart Farming Live Dashboard</h1>
+                <p>Real-time IoT monitoring system for precision agriculture</p>
+            </div>
+            <div class="header-right">
+                <div class="time-display">
+                    <i class="far fa-clock"></i>
+                    <span id="current-time">--:--:--</span>
+                </div>
+                <div class="refresh-indicator">
+                    <div class="refresh-dot"></div>
+                    <span>Live Updating</span>
+                </div>
+            </div>
+        </header>
+
+        <div class="dashboard">
+            <!-- pH Value Card -->
+            <div class="card info ph">
+                <div class="card-header">
+                    <div class="card-title">
+                        <div class="card-icon">
+                            <i class="fas fa-vial"></i>
+                        </div>
+                        <span>pH Value</span>
+                    </div>
+                    <div class="trend">
+                        <i class="fas fa-exchange-alt"></i>
+                        <span>Optimal: 6.0-7.0</span>
+                    </div>
+                </div>
+                <div class="card-value" id="ph_value">---</div>
+                <div class="card-footer">
+                    <div class="status-badge status-ok">
+                        <i class="fas fa-check-circle"></i>
+                        <span>Normal</span>
+                    </div>
+                    <div class="trend">
+                        <i class="fas fa-history"></i>
+                        <span>Updated just now</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- pH Voltage Card -->
+            <div class="card info ph">
+                <div class="card-header">
+                    <div class="card-title">
+                        <div class="card-icon">
+                            <i class="fas fa-bolt"></i>
+                        </div>
+                        <span>pH Sensor Voltage</span>
+                    </div>
+                    <div class="trend">
+                        <i class="fas fa-chart-line"></i>
+                        <span>Reference: 2.5V</span>
+                    </div>
+                </div>
+                <div class="card-value" id="ph_voltage">---</div>
+                <div class="card-unit">Volts</div>
+                <div class="card-footer">
+                    <div class="trend">
+                        <i class="fas fa-microchip"></i>
+                        <span>Sensor Active</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- MQ137 Gas Card -->
+            <div class="card warning gas">
+                <div class="card-header">
+                    <div class="card-title">
+                        <div class="card-icon">
+                            <i class="fas fa-wind"></i>
+                        </div>
+                        <span>Ammonia (NH₃) Level</span>
+                    </div>
+                    <div class="trend">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        <span>Monitor closely</span>
+                    </div>
+                </div>
+                <div class="card-value" id="mq137">---</div>
+                <div class="card-unit">PPM</div>
+                <div class="card-footer">
+                    <div class="status-badge status-ok">
+                        <i class="fas fa-check-circle"></i>
+                        <span>Safe</span>
+                    </div>
+                    <div class="trend">
+                        <i class="fas fa-gas-pump"></i>
+                        <span>MQ137 Sensor</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Rain Status Card -->
+            <div class="card info rain">
+                <div class="card-header">
+                    <div class="card-title">
+                        <div class="card-icon">
+                            <i class="fas fa-cloud-rain"></i>
+                        </div>
+                        <span>Rain Status</span>
+                    </div>
+                </div>
+                <div class="card-value" id="rain_status_display">---</div>
+                <div class="card-footer">
+                    <div class="status-badge" id="rain_status">
+                        <i class="fas fa-question-circle"></i>
+                        <span>---</span>
+                    </div>
+                    <div class="trend">
+                        <i class="fas fa-cloud"></i>
+                        <span>Precipitation Sensor</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Flame Status Card -->
+            <div class="card danger flame">
+                <div class="card-header">
+                    <div class="card-title">
+                        <div class="card-icon">
+                            <i class="fas fa-fire"></i>
+                        </div>
+                        <span>Flame Detection</span>
+                    </div>
+                </div>
+                <div class="card-value" id="flame_status_display">---</div>
+                <div class="card-footer">
+                    <div class="status-badge" id="flame_status">
+                        <i class="fas fa-question-circle"></i>
+                        <span>---</span>
+                    </div>
+                    <div class="trend">
+                        <i class="fas fa-shield-alt"></i>
+                        <span>Fire Safety System</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Temperature Card -->
+            <div class="card temp">
+                <div class="card-header">
+                    <div class="card-title">
+                        <div class="card-icon">
+                            <i class="fas fa-thermometer-half"></i>
+                        </div>
+                        <span>Temperature</span>
+                    </div>
+                    <div class="trend">
+                        <i class="fas fa-temperature-high"></i>
+                        <span>Ideal: 20-30°C</span>
+                    </div>
+                </div>
+                <div class="card-value" id="temperature">---</div>
+                <div class="card-unit">°C</div>
+                <div class="card-footer">
+                    <div class="trend">
+                        <i class="fas fa-sun"></i>
+                        <span>Ambient Sensor</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Humidity Card -->
+            <div class="card humidity">
+                <div class="card-header">
+                    <div class="card-title">
+                        <div class="card-icon">
+                            <i class="fas fa-tint"></i>
+                        </div>
+                        <span>Humidity</span>
+                    </div>
+                    <div class="trend">
+                        <i class="fas fa-percentage"></i>
+                        <span>Ideal: 40-70%</span>
+                    </div>
+                </div>
+                <div class="card-value" id="humidity">---</div>
+                <div class="card-unit">%</div>
+                <div class="card-footer">
+                    <div class="trend">
+                        <i class="fas fa-cloud"></i>
+                        <span>Relative Humidity</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Soil Moisture Card -->
+            <div class="card success soil">
+                <div class="card-header">
+                    <div class="card-title">
+                        <div class="card-icon">
+                            <i class="fas fa-leaf"></i>
+                        </div>
+                        <span>Soil Moisture</span>
+                    </div>
+                    <div class="trend">
+                        <i class="fas fa-chart-area"></i>
+                        <span>Ideal: 40-60%</span>
+                    </div>
+                </div>
+                <div class="card-value" id="soil_percent">---</div>
+                <div class="card-unit">%</div>
+                <div class="card-footer">
+                    <div class="trend">
+                        <i class="fas fa-tree"></i>
+                        <span>Capacitive Sensor</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Soil Raw Data Card -->
+            <div class="card info soil">
+                <div class="card-header">
+                    <div class="card-title">
+                        <div class="card-icon">
+                            <i class="fas fa-database"></i>
+                        </div>
+                        <span>Soil Raw Sensor Data</span>
+                    </div>
+                    <div class="trend">
+                        <i class="fas fa-microchip"></i>
+                        <span>Analog Reading</span>
+                    </div>
+                </div>
+                <div class="card-value" id="soil_raw">---</div>
+                <div class="card-unit">ADC Value</div>
+                <div class="card-footer">
+                    <div class="trend">
+                        <i class="fas fa-server"></i>
+                        <span>Raw Sensor Data</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <footer>
+            <div class="footer-text">
+                <i class="fas fa-satellite-dish"></i>
+                <span>Real-time IoT Smart Farming Monitoring System</span>
+            </div>
+            <div class="system-status">
+                <i class="fas fa-circle"></i>
+                <span>System Status: <strong>Online</strong> • All sensors active</span>
+            </div>
+        </footer>
+    </div>
+
+    <script>
+    // ================= TIME =================
+    function updateTime() {
+        const now = new Date();
+        document.getElementById('current-time').textContent =
+            now.toLocaleTimeString('en-US', { hour12: false });
+    }
+
+    updateTime();
+    setInterval(updateTime, 1000);
+
+    // ================= FETCH DATA =================
+    function fetchData() {
+        fetch('/api/data')
+        .then(res => res.json())
+        .then(res => {
+
+            // 🔴 If IoT not connected → show ---
+            if (!res.iot_connected) {
+                setAllToNull();
+                return;
+            }
+
+            const data = res.data || {};
+
+            // ================= BASIC VALUES =================
+            document.getElementById("ph_value").innerText = data.ph_value ?? "---";
+            document.getElementById("ph_voltage").innerText = data.ph_voltage ?? "---";
+            document.getElementById("mq137").innerText = data.mq137_raw ?? "---";
+            document.getElementById("soil_percent").innerText = data.soil_percent ?? "---";
+            document.getElementById("soil_raw").innerText = data.soil_raw ?? "---";
+
+            document.getElementById("temperature").innerText = data.temperature ?? "---";
+            document.getElementById("humidity").innerText = data.humidity ?? "---";
+
+            // ================= RAIN STATUS =================
+            const rainStatus = data.rain_status ?? "---";
+            const rainBadge = document.getElementById("rain_status");
+            const rainDisplay = document.getElementById("rain_status_display");
+
+            rainDisplay.innerText = rainStatus;
+
+            if (rainStatus === "Rain Detected") {
+                rainBadge.className = "status-badge status-alert";
+                rainBadge.innerHTML =
+                    '<i class="fas fa-exclamation-triangle"></i><span>Alert</span>';
+                rainDisplay.style.color = "var(--danger)";
+            } else {
+                rainBadge.className = "status-badge status-ok";
+                rainBadge.innerHTML =
+                    '<i class="fas fa-check-circle"></i><span>Normal</span>';
+                rainDisplay.style.color = "var(--success)";
+            }
+
+            // ================= FLAME STATUS =================
+            const flameStatus = data.flame_status ?? "---";
+            const flameBadge = document.getElementById("flame_status");
+            const flameDisplay = document.getElementById("flame_status_display");
+
+            flameDisplay.innerText = flameStatus;
+
+            if (flameStatus === "Flame Detected") {
+                flameBadge.className = "status-badge status-alert";
+                flameBadge.innerHTML =
+                    '<i class="fas fa-exclamation-triangle"></i><span>Alert</span>';
+                flameDisplay.style.color = "var(--danger)";
+            } else {
+                flameBadge.className = "status-badge status-ok";
+                flameBadge.innerHTML =
+                    '<i class="fas fa-check-circle"></i><span>Normal</span>';
+                flameDisplay.style.color = "var(--success)";
+            }
+
+            // ================= UPDATE INDICATOR =================
+            document.querySelectorAll('.trend span').forEach(span => {
+                span.textContent = "Updated just now";
+            });
+        })
+        .catch(err => {
+            console.error("API Error:", err);
+            setAllToNull();
+        });
+    }
+
+    // ================= SET ALL TO NULL =================
+    function setAllToNull() {
+        const ids = [
+            "ph_value", "ph_voltage", "mq137",
+            "soil_percent", "soil_raw",
+            "temperature", "humidity",
+            "rain_status_display", "flame_status_display"
+        ];
+
+        ids.forEach(id => {
+            const el = document.getElementById(id);
+            if (el) el.innerText = "---";
+        });
+    }
+
+    // ================= RUN =================
+    fetchData();
+    setInterval(fetchData, 2000); // UI refresh (backend updates every 10s)
+</script>
+
+</body>
+</html>
