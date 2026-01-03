@@ -1,0 +1,129 @@
+# =========================
+# OS / Editor files
+# =========================
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+*.log
+
+.vscode/
+.idea/
+*.iml
+
+
+
+# =========================
+# Python
+# =========================
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+
+.env
+.env.*
+venv/
+myvenv/
+env/
+ENV/
+.venv/
+
+pip-log.txt
+pip-delete-this-directory.txt
+
+# =========================
+# Flask / Django
+# =========================
+instance/
+*.sqlite3
+
+# =========================
+# Jupyter / ML
+# =========================
+.ipynb_checkpoints/
+*.h5
+*.pt
+*.pth
+*.onnx
+*.ckpt
+models/
+weights/
+
+# =========================
+# Node / React / Vite
+# =========================
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+dist/
+build/
+.vite/
+
+# =========================
+# Logs & temp
+# =========================
+logs/
+*.tmp
+*.bak
+
+# =========================
+# Uploads / generated data
+# =========================
+uploads/
+media/
+data/
+output/
+
+# =========================
+# Secrets
+# =========================
+*.key
+*.pem
+*.crt
+secrets/
+credentials.json
+
+# =========================
+# Docker
+# =========================
+.dockerignore
+# Ignore everything by default
+*
+ 
+# Allow only these folders
+!Backend/
+!Backend/**
+
+!Farmer Frontend/
+!Farmer Frontend/**
+
+# Allow gitignore
+!.gitignore
+
+# Ignore uploaded files inside Backend
+Backend/uploads/
+Backend/uploads/**
+
+# =========================
+# Backend uploads (keep folder, ignore files)
+# =========================
+Backend/uploads/*
+
+# Ignore common uploaded file types
+Backend/uploads/**/*.pdf
+Backend/uploads/**/*.jpg
+Backend/uploads/**/*.jpeg
+Backend/uploads/**/*.png
+Backend/uploads/**/*.webp
+Backend/uploads/**/*.doc
+Backend/uploads/**/*.docx
+Backend/uploads/**/*.xls
+Backend/uploads/**/*.xlsx
+Backend/uploads/**/*.csv
+
+# Keep folder structure
+!Backend/uploads/.gitkeep
+!Backend/uploads/**/.gitkeep
