@@ -11,8 +11,6 @@ Thumbs.db
 .idea/
 *.iml
 
-
-
 # =========================
 # Python
 # =========================
@@ -90,73 +88,18 @@ credentials.json
 # Docker
 # =========================
 .dockerignore
-# Ignore everything by default
-*
- # =========================
-# Allow only selected projects
+
 # =========================
+# Explicitly tracked project folders
+# =========================
+Backend/
+Farmer Frontend/
+AgriIOT/
+Kisan-Mitra-Mega-Project-backup/
+KISAN-USER/
+plant_disease_rag/
 
-!Backend/
-!Backend/**
-
-!Farmer Frontend/
-!Farmer Frontend/**
-
-!AgriIOT/
-!AgriIOT/**
-
-!Kisan-Mitra-Mega-Project-backup/
-!Kisan-Mitra-Mega-Project-backup/**
-
-# Always allow gitignore
+# =========================
+# Always allow git files
+# =========================
 !.gitignore
-# =========================
-# Allow only selected projects
-# =========================
-
-!Backend/
-!Backend/**
-
-!Farmer Frontend/
-!Farmer Frontend/**
-
-!AgriIOT/
-!AgriIOT/**
-
-!Kisan-Mitra-Mega-Project-backup/
-!Kisan-Mitra-Mega-Project-backup/**
-
-# Always allow gitignore
-!.gitignore
-# =========================
-# Allow only selected projects
-# =========================
-
-!Backend/
-!Backend/**
-
-!Farmer Frontend/
-!Farmer Frontend/**
-
-!AgriIOT/
-!AgriIOT/**
-
-!Kisan-Mitra-Mega-Project-backup/
-!Kisan-Mitra-Mega-Project-backup/**
-
-# Always allow gitignore
-!.gitignore
-# =========================
-# Ignore ALL image files (entire repo)
-# =========================
-*.jpg
-*.jpeg
-*.png
-*.gif
-*.bmp
-*.webp
-*.tiff
-*.svg
-*.ico
-*.heic
-*.pdf
